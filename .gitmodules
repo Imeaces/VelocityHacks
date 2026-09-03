@@ -1,0 +1,3 @@
+[submodule "VelocityServer"]
+	path = VelocityServer
+	url = https://github.com/PaperMC/Velocity.git
