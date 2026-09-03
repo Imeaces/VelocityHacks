@@ -33,6 +33,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/FabricLoader" />
             <option value="$PROJECT_DIR$/LevelLogin" />
             <option value="$PROJECT_DIR$/VelocityServer" />
             <option value="$PROJECT_DIR$/VelocityServer/api" />
