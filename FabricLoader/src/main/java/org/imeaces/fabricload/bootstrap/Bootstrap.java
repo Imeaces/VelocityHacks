@@ -1,6 +1,6 @@
 package org.imeaces.fabricload.bootstrap;
 
-import org.imeaces.fabricload.Entrypoint;
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;

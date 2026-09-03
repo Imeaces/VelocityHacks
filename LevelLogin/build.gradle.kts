@@ -1,5 +1,5 @@
 plugins {
-	id("buildsrc.convention.kotlin-jvm")
+	id("buildsrc.convention.multable-jvm")
 }
 
 dependencies {
@@ -7,14 +7,24 @@ dependencies {
 
 	compileOnly("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT")
 	compileOnly("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
+	annotationProcessor("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
 }
 
 tasks.processResources {
-	val version = version
-	inputs.property("version", version)
+	inputs.property("version", project.version)
+	inputs.property("description", project.description)
+
+	val props = mapOf(
+		"version" to version,
+		"description" to project.description
+	)
 
 	filesMatching("fabric.mod.json") {
-		expand("version" to version)
+		expand(props)
+	}
+
+	filesMatching("velocity-plugin.json") {
+		expand(props)
 	}
 }
 

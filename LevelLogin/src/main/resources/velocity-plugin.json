@@ -1,0 +1,10 @@
+{
+  "id": "level-login",
+  "name": "MultiLevelLogin",
+  "version": "${version}",
+  "main": "org.imeaces.levelLogin.LevelLoginPlugin",
+  "description": "Imeaces Origin Server MultiLevelLogin Plugin",
+  "authors": [
+    "Silvigarabis"
+  ]
+}

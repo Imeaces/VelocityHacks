@@ -1,5 +1,7 @@
 package org.imeaces.fabricload;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;

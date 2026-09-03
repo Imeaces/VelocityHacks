@@ -18,6 +18,7 @@ application {
 
     applicationDefaultJvmArgs = listOf(
         "-Dfabric.development=true",
-        "--enable-native-access=ALL-UNNAMED"
+        "--enable-native-access=ALL-UNNAMED",
+        "--sun-misc-unsafe-memory-access=allow",
     )
 }
