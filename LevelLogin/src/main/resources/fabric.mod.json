@@ -1,31 +1,29 @@
 {
 	"schemaVersion": 1,
-	"id": "template-mod",
+	"id": "multilevellogin",
 	"version": "${version}",
-	"name": "Template Mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Level Login",
+	"description": "Imeaces Origin Server Multi Level Login",
 	"authors": [
-		"Me!"
+		"Silvigarabis"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/Imeaces",
+		"sources": "https://github.com/Imeaces/LevelLogin"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/template-mod/icon.png",
+	"license": "ARR",
+	"icon": "assets/level-login/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"org.imeaces.levellogin.TemplateMod"
+			"org.imeaces.levellogin.LevelLoginMod"
 		]
 	},
 	"mixins": [
-		"template-mod.mixins.json"
+		"level-login.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",
-		"minecraft": "~26.2",
-		"java": ">=25",
-		"fabric-api": "*"
+		"java": ">=25"
 	}
 }

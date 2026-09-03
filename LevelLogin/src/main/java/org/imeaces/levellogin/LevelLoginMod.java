@@ -2,12 +2,10 @@ package org.imeaces.levellogin;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.minecraft.resources.Identifier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TemplateMod implements ModInitializer {
+public class LevelLoginMod implements ModInitializer {
 	public static final String MOD_ID = "template-mod";
 
 	// This logger is used to write text to the console and the log file.
@@ -24,7 +22,4 @@ public class TemplateMod implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 	}
 
-	public static Identifier id(String path) {
-		return Identifier.fromNamespaceAndPath(MOD_ID, path);
-	}
 }
