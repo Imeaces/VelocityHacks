@@ -8,6 +8,8 @@ dependencies {
 	compileOnly("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT")
 	compileOnly("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
 	annotationProcessor("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
+
+	compileOnly("org.geysermc.floodgate:api:2.2.5-SNAPSHOT")
 }
 
 tasks.processResources {

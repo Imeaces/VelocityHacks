@@ -13,6 +13,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.fabricmc.net/") }
         maven { url = uri("https://repo.spongepowered.org/maven/") }
         maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+        maven { url = uri("https://repo.opencollab.dev/main/") }
     }
 }
 
