@@ -93,7 +93,7 @@ public final class DynamicGameLocator implements GameLocatorService {
         try (final Stream<Path> libDirWalker = Files.list(libDir)) {
           for (var it = libDirWalker.iterator(); it.hasNext(); ) {
             var libPath = it.next();
-            if (libPath.endsWith(".jar")) {
+            if (libPath.toString().endsWith(".jar")) {
               addGameLib(libPath);
             }
           }
