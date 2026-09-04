@@ -1,3 +1,9 @@
 [submodule "VelocityServer"]
 	path = VelocityServer
 	url = https://github.com/PaperMC/Velocity.git
+[submodule "Floodgate"]
+	path = Floodgate
+	url = https://github.com/GeyserMC/Floodgate.git
+[submodule "IgniteLoader"]
+	path = IgniteLoader
+	url = https://github.com/Imeaces/IgniteLoader.git

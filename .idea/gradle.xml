@@ -12,6 +12,18 @@
                   <project path="$PROJECT_DIR$/buildSrc" />
                 </projects>
               </build>
+              <build path="$PROJECT_DIR$/IgniteLoader" name="ignite-parent">
+                <projects>
+                  <project path="$PROJECT_DIR$/IgniteLoader" />
+                  <project path="$PROJECT_DIR$/IgniteLoader/api" />
+                  <project path="$PROJECT_DIR$/IgniteLoader/launcher" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/IgniteLoader/build-logic" name="ignite-build-logic">
+                <projects>
+                  <project path="$PROJECT_DIR$/IgniteLoader/build-logic" />
+                </projects>
+              </build>
               <build path="$PROJECT_DIR$/VelocityServer" name="velocity">
                 <projects>
                   <project path="$PROJECT_DIR$/VelocityServer" />
@@ -33,7 +45,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/FabricLoader" />
+            <option value="$PROJECT_DIR$/IgniteLoader" />
+            <option value="$PROJECT_DIR$/IgniteLoader/api" />
+            <option value="$PROJECT_DIR$/IgniteLoader/build-logic" />
+            <option value="$PROJECT_DIR$/IgniteLoader/launcher" />
             <option value="$PROJECT_DIR$/LevelLogin" />
             <option value="$PROJECT_DIR$/VelocityServer" />
             <option value="$PROJECT_DIR$/VelocityServer/api" />

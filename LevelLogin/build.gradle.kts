@@ -3,13 +3,14 @@ plugins {
 }
 
 dependencies {
-	implementation(project(":FabricLoader"))
+	compileOnly("space.vectrix.ignite:ignite-launcher:1.2.2-SNAPSHOT")
 
 	compileOnly("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT")
 	compileOnly("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
 	annotationProcessor("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
 
 	compileOnly("org.geysermc.floodgate:api:2.2.5-SNAPSHOT")
+	compileOnly("org.geysermc.floodgate:velocity:2.2.5-SNAPSHOT")
 }
 
 tasks.processResources {
@@ -21,7 +22,7 @@ tasks.processResources {
 		"description" to project.description
 	)
 
-	filesMatching("fabric.mod.json") {
+	filesMatching("ignite.mod.json") {
 		expand(props)
 	}
 
