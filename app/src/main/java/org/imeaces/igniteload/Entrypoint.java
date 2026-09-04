@@ -13,7 +13,7 @@ import java.util.jar.JarFile;
 public class Entrypoint {
     static String entrypoint;
 
-    static void main(String[] args) throws IOException, URISyntaxException {
+    static void main(String[] args) throws IOException {
         var programJarFile = Path.of(args[0]);
         var programArgsLen = args.length - 1;
         var programArgs = programArgsLen > 0
