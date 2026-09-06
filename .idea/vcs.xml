@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/IgniteLoader" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/KeitaLoader" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/VelocityServer" vcs="Git" />
   </component>
 </project>
