@@ -13,7 +13,7 @@ dependencies {
                 objects.named<Bundling>(Bundling.SHADOWED)
             )
         }
-    }
+    resources}
 }
 
 application {
