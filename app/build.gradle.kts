@@ -26,7 +26,6 @@ application {
 
     applicationDefaultJvmArgs = listOf(
         "-Dignite.locator=dynamic",
-        "-DgameLibraryDirs=plugins",
         "--enable-native-access=ALL-UNNAMED",
         "--sun-misc-unsafe-memory-access=allow",
     )
