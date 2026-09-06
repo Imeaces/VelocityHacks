@@ -11,7 +11,7 @@ public class SimpleFloodgateApiTransform {
     @CInject(method = "<init>", target = @CTarget("RETURN"))
     public void inject$init() {
         LoggerFactory.getLogger("Silvigarabis").info("I mixed some code into Floodgate via modTransform!");
-        LoggerFactory.getLogger("Silvigarabis").info("I mixed some code into Floodgate via modTransform!");
-        throw new RuntimeException("but I would like to inject this!");
+//        LoggerFactory.getLogger("Silvigarabis").info("I mixed some code into Floodgate via modTransform!");
+//        throw new RuntimeException("but I would like to inject this!");
     }
 }

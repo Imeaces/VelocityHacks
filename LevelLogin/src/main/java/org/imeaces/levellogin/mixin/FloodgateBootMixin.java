@@ -14,7 +14,7 @@ public class FloodgateBootMixin {
             method = "<init>",
             at = @At("RETURN")
     )
-    private static void init(CallbackInfo info) {
-        Logger.info("I mixed some code to floodgate!");
+    private void init(CallbackInfo info) {
+        Logger.info("I mixed some code to floodgate via mixin!");
     }
 }

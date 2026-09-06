@@ -5,8 +5,6 @@ plugins {
 dependencies {
 	compileOnly("org.imeaces:KeitaLoader-launcher:0.1.0")
 
-	compileOnly("space.vectrix.ignite:ignite-launcher:1.2.2-SNAPSHOT")
-
 	compileOnly("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT")
 	compileOnly("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
 	annotationProcessor("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")

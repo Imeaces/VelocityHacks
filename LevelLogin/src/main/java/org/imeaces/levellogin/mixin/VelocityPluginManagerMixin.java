@@ -6,6 +6,7 @@ import org.imeaces.levelLogin.LevelLoginPlugin;
 import org.imeaces.levellogin.util.AdditionalPathDirectoryStream;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.tinylog.Logger;
 
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
@@ -20,9 +21,10 @@ public class VelocityPluginManagerMixin {
             )
     )
     private DirectoryStream<Path> modifyPluginStream(
-            DirectoryStream<Path> original,
-            Path directory
+            DirectoryStream<Path> original
     ) {
+        Logger.info("this -> classloader: {}", this.getClass().getClassLoader());
+        Logger.info("LevelLoginPlugin -> classloader: {}", LevelLoginPlugin.class.getClassLoader());
         return new AdditionalPathDirectoryStream(
                 original,
                 LevelLoginPlugin.getJarPath()
