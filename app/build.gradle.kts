@@ -1,15 +1,20 @@
 plugins {
     // Apply the Application plugin to add support for building an executable JVM application.
-    java
     application
     id("com.ryandens.javaagent-application") version "0.12.2"
 }
 
 dependencies {
-    // Project "app" depends on project "utils". (Project paths are separated with ":", so ":utils" refers to the top-level "utils" project.)
+    runtimeOnly(project(":IgniteDynLoad"))
     runtimeOnly(project(":LevelLogin"))
-    implementation("space.vectrix.ignite:ignite-launcher:1.2.2-SNAPSHOT")
-    javaagent("space.vectrix.ignite:ignite-launcher:1.2.2-SNAPSHOT")
+    javaagent("space.vectrix.ignite:ignite-launcher:1.2.2-SNAPSHOT") {
+        attributes {
+            attribute(
+                Bundling.BUNDLING_ATTRIBUTE,
+                objects.named<Bundling>(Bundling.SHADOWED)
+            )
+        }
+    }
 }
 
 application {

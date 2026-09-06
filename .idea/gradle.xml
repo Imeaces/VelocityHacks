@@ -45,6 +45,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/IgniteDynLoad" />
             <option value="$PROJECT_DIR$/IgniteLoader" />
             <option value="$PROJECT_DIR$/IgniteLoader/api" />
             <option value="$PROJECT_DIR$/IgniteLoader/build-logic" />

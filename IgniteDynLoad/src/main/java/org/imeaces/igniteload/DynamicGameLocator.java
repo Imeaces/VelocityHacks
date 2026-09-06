@@ -10,6 +10,7 @@ import space.vectrix.ignite.game.GameProvider;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
@@ -45,7 +46,7 @@ public final class DynamicGameLocator implements GameLocatorService {
             () -> Blackboard.get(Blackboard.GAME_TARGET).orElse(Entrypoint.entrypoint));
 
     // Locate the game jar.
-    if(Blackboard.get(Blackboard.GAME_JAR).isEmpty()) {
+    if(!Blackboard.get(Blackboard.GAME_JAR).isPresent()) {
       Blackboard.put(Blackboard.GAME_JAR, PROVIDER.gamePath());
     }
   }
@@ -56,8 +57,8 @@ public final class DynamicGameLocator implements GameLocatorService {
   }
 
   public static void addGameLibs(String... libNames){
-    for (var libName : libNames){
-      var libPath = Path.of(libName);
+    for (String libName : libNames){
+      @NotNull Path libPath = Paths.get(libName);
       if (!addGameLib(libPath)) {
         Logger.warn("gameLibraries contain invalid jar library: " + libPath);
       }
@@ -75,24 +76,24 @@ public final class DynamicGameLocator implements GameLocatorService {
   }
 
   public static void loadSysPropGameLibs() {
-    var sysProp_gameLibraries = System.getProperty("gameLibraries");
-    var sysProp_gameLibraryDirs = System.getProperty("gameLibraryDirs");
+    String sysProp_gameLibraries = System.getProperty("gameLibraries");
+    String sysProp_gameLibraryDirs = System.getProperty("gameLibraryDirs");
 
     if (sysProp_gameLibraries != null) {
       addGameLibs(sysProp_gameLibraries.split(":"));
     }
 
     if (sysProp_gameLibraryDirs != null) {
-      for (var libDirName : sysProp_gameLibraryDirs.split(":")) {
-        var libDir = Path.of(libDirName);
+      for (@NotNull String libDirName : sysProp_gameLibraryDirs.split(":")) {
+        @NotNull Path libDir = Paths.get(libDirName);
         if (!libDir.toFile().isDirectory()) {
           Logger.warn("gameLibraries contain invalid directory: " + libDirName);
           continue;
         }
 
         try (final Stream<Path> libDirWalker = Files.list(libDir)) {
-          for (var it = libDirWalker.iterator(); it.hasNext(); ) {
-            var libPath = it.next();
+          for (java.util.@NotNull Iterator<Path> it = libDirWalker.iterator(); it.hasNext(); ) {
+            Path libPath = it.next();
             if (libPath.toString().endsWith(".jar")) {
               addGameLib(libPath);
             }
@@ -105,7 +106,7 @@ public final class DynamicGameLocator implements GameLocatorService {
   }
 
   static boolean isJarFile(Path libPath){
-    try (var _ = new JarFile(libPath.toFile())){
+    try (JarFile ignored = new JarFile(libPath.toFile())){
       return true;
     } catch (Throwable ex){
       return false;

@@ -5,22 +5,22 @@ import space.vectrix.ignite.Blackboard;
 import space.vectrix.ignite.IgniteBootstrap;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.jar.JarFile;
 
 public class Entrypoint {
     static String entrypoint;
 
-    static void main(String[] args) throws IOException {
-        var programJarFile = Path.of(args[0]);
-        var programArgsLen = args.length - 1;
-        var programArgs = programArgsLen > 0
+    public static void main(String[] args) throws IOException {
+        Path programJarFile = Paths.get(args[0]);
+        int programArgsLen = args.length - 1;
+        String[] programArgs = programArgsLen > 0
                 ? Arrays.copyOfRange(args, 1, programArgsLen)
                 : new String[0];
 
-        try (var jar = new JarFile(programJarFile.toFile())){
+        try (JarFile jar = new JarFile(programJarFile.toFile())){
             entrypoint = jar.getManifest()
                 .getMainAttributes()
                 .getValue("Main-Class");
