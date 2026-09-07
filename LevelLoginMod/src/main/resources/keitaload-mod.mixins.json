@@ -7,7 +7,6 @@
     "FloodgateBootMixin",
     "InitialLoginSessionHandlerMixin",
     "ServerChannelInitializerMixin",
-    "VelocityPluginManagerMixin",
     "VelocityServerMixin"
   ],
   "injectors": {

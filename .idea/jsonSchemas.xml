@@ -17,6 +17,9 @@
                   <Item>
                     <option name="path" value="LevelLogin/src/main/resources/keitaload-mod.mixins.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="LevelLoginMod/src/main/resources/keitaload-mod.mixins.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
