@@ -12,18 +12,6 @@
                   <project path="$PROJECT_DIR$/buildSrc" />
                 </projects>
               </build>
-              <build path="$PROJECT_DIR$/IgniteLoader" name="ignite-parent">
-                <projects>
-                  <project path="$PROJECT_DIR$/IgniteLoader" />
-                  <project path="$PROJECT_DIR$/IgniteLoader/api" />
-                  <project path="$PROJECT_DIR$/IgniteLoader/launcher" />
-                </projects>
-              </build>
-              <build path="$PROJECT_DIR$/IgniteLoader/build-logic" name="ignite-build-logic">
-                <projects>
-                  <project path="$PROJECT_DIR$/IgniteLoader/build-logic" />
-                </projects>
-              </build>
               <build path="$PROJECT_DIR$/KeitaLoader" name="KeitaLoader-parent">
                 <projects>
                   <project path="$PROJECT_DIR$/KeitaLoader" />
@@ -53,16 +41,12 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/IgniteDynLoad" />
-            <option value="$PROJECT_DIR$/IgniteLoader" />
-            <option value="$PROJECT_DIR$/IgniteLoader/api" />
-            <option value="$PROJECT_DIR$/IgniteLoader/build-logic" />
-            <option value="$PROJECT_DIR$/IgniteLoader/launcher" />
             <option value="$PROJECT_DIR$/KeitaLoader" />
             <option value="$PROJECT_DIR$/KeitaLoader/exampleMod" />
             <option value="$PROJECT_DIR$/KeitaLoader/exampleProgram" />
             <option value="$PROJECT_DIR$/KeitaLoader/launcher" />
-            <option value="$PROJECT_DIR$/LevelLogin" />
+            <option value="$PROJECT_DIR$/LevelLoginMod" />
+            <option value="$PROJECT_DIR$/LevelLoginPlugin" />
             <option value="$PROJECT_DIR$/VelocityServer" />
             <option value="$PROJECT_DIR$/VelocityServer/api" />
             <option value="$PROJECT_DIR$/VelocityServer/build-logic" />

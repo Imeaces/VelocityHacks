@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    runtimeOnly(project(":LevelLogin"))
+    runtimeOnly(project(":LevelLoginMod"))
     javaagent("org.imeaces:KeitaLoader-launcher:0.1.0") {
         attributes {
             attribute(
@@ -13,7 +13,7 @@ dependencies {
                 objects.named<Bundling>(Bundling.SHADOWED)
             )
         }
-    resources}
+    }
 }
 
 application {
@@ -27,4 +27,8 @@ application {
         "--enable-native-access=ALL-UNNAMED",
         "--sun-misc-unsafe-memory-access=allow",
     )
+}
+
+tasks.named("build") {
+    dependsOn(tasks.named("installDist"))
 }
