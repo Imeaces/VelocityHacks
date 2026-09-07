@@ -26,6 +26,8 @@ application {
     applicationDefaultJvmArgs = listOf(
         "--enable-native-access=ALL-UNNAMED",
         "--sun-misc-unsafe-memory-access=allow",
+        "-Dkeitaload.standalone-mods-classloader=false",
+        "-Dkeitaload.load-classpath-mods=true",
     )
 }
 
