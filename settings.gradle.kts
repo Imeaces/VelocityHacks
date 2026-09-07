@@ -10,8 +10,6 @@ dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
         mavenCentral()
-        maven { url = uri("https://maven.fabricmc.net/") }
-        maven { url = uri("https://repo.spongepowered.org/maven/") }
         maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
         maven { url = uri("https://repo.opencollab.dev/main/") }
     }
@@ -19,16 +17,8 @@ dependencyResolutionManagement {
 
 pluginManagement {
     repositories {
-        maven {
-            name = "Fabric"
-            url = uri("https://maven.fabricmc.net/")
-        }
         mavenCentral()
         gradlePluginPortal()
-    }
-
-    plugins {
-        id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
     }
 }
 
