@@ -2,9 +2,12 @@ package org.imeaces.levelLogin
 
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
+import com.velocitypowered.api.event.connection.PreLoginEvent
+import com.velocitypowered.api.event.player.GameProfileRequestEvent
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
+import org.imeaces.levellogin.profile.ProfileProvider
 import org.slf4j.Logger
 import java.nio.file.Path
 
@@ -24,5 +27,16 @@ class LevelLoginPlugin @Inject constructor(
     companion object {
         @JvmStatic
         var jarPath: Path = Path.of( LevelLoginPlugin::class.java.protectionDomain.codeSource.location.toURI() )
+    }
+
+    @Subscribe
+    fun onGameProfileRequest(event: GameProfileRequestEvent) {
+        var inbound = event.connection
+        // event.gameProfile = ProfileProvider.getGameProfile(inbound)
+    }
+
+    @Subscribe
+    fun onPreLogin(event: PreLoginEvent){
+        event.result = PreLoginEvent.PreLoginComponentResult.forceOfflineMode()
     }
 }

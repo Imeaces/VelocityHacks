@@ -1,5 +1,13 @@
 plugins {
 	id("buildsrc.convention.multable-jvm")
+	id("me.glicz.access-widen") version "3.0.0"
+}
+
+accessWiden {
+	// load *.accesswidener files from resources
+	accessWideners.from(fileTree(sourceSets.main.get().resources.srcDirs.first()) {
+		include("*.accesswidener")
+	})
 }
 
 dependencies {
@@ -14,7 +22,7 @@ dependencies {
 	compileOnlyApi("org.geysermc.floodgate:api:2.2.5-SNAPSHOT")
 
 	// for mixin usage
-	compileOnly("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT")
+	compileOnly(accessWiden("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT"))
 	compileOnly("org.geysermc.floodgate:core:2.2.5-SNAPSHOT")
 	compileOnly("org.geysermc.floodgate:velocity:2.2.5-SNAPSHOT")
 }

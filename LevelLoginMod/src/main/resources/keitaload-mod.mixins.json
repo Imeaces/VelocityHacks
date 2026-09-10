@@ -5,6 +5,7 @@
   "mixins": [
     "FgVelocityListenerMixin",
     "InitialLoginSessionHandlerMixin",
+    "FgHandshakeHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
