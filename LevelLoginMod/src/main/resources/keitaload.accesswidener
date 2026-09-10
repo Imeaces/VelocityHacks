@@ -1,4 +1,5 @@
 accessWidener v2 named
 
 accessible class com/velocitypowered/proxy/connection/client/InitialLoginSessionHandler$LoginState
+accessible method com/velocitypowered/proxy/connection/client/AuthSessionHandler <init> (Lcom/velocitypowered/proxy/VelocityServer;Lcom/velocitypowered/proxy/connection/client/LoginInboundConnection;Lcom/velocitypowered/api/util/GameProfile;ZLjava/lang/String;)V
 accessible field com/velocitypowered/proxy/protocol/packet/EncryptionRequestPacket shouldAuthenticate Z
