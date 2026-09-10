@@ -3,8 +3,10 @@ plugins {
 }
 
 dependencies {
-	// mod loader
+	// mod loader etc.
 	compileOnly("org.imeaces:KeitaLoader-launcher:0.1.0")
+	compileOnly("org.projectlombok:lombok:1.18.42")
+	annotationProcessor("org.projectlombok:lombok:1.18.42")
 
 	// velocity plugins
 	compileOnlyApi("com.velocitypowered:velocity-api:4.1.2-SNAPSHOT")
