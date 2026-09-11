@@ -77,7 +77,11 @@ public abstract class InitialLoginSessionHandlerMixin {
         boolean shouldAuthenticate = true;
 
         if (accountId != null) {
-            // assume offline because found accountId before online authenticate
+            /*
+              assume offline because found accountId before online authenticate.
+
+              it might come from floodgate, but not important for us. see also FgVelocityListenerMixin
+             */
 
             if (mcConnection.getProtocolVersion().noLessThan(ProtocolVersion.MINECRAFT_1_20_5)) {
                 // enable encryption on above 1.20.5
@@ -88,6 +92,8 @@ public abstract class InitialLoginSessionHandlerMixin {
 
             } else {
                 // normal offline auth
+
+                LevelLoginMain.getLogger().info( "enter offline mode for player {}", login.getUsername() );
 
                 var gameProfile = HandleGrabGameProfile.grabGameProfile(accountId);
 
@@ -107,6 +113,12 @@ public abstract class InitialLoginSessionHandlerMixin {
         }
 
         // Request encryption (may authenticate).
+
+        LevelLoginMain.getLogger().info(
+                "request encryption for player {}, shouldAuthenticate: {}",
+                login.getUsername(), shouldAuthenticate
+        );
+
         EncryptionRequestPacket request = generateEncryptionRequest();
         request.shouldAuthenticate = shouldAuthenticate;
         verify = Arrays.copyOf(request.getVerifyToken(), 4);

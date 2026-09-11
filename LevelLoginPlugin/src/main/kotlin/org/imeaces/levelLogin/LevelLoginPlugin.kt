@@ -7,8 +7,10 @@ import com.velocitypowered.api.event.player.GameProfileRequestEvent
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
+import com.velocitypowered.api.util.GameProfile
 import com.velocitypowered.proxy.connection.client.LoginInboundConnection
 import org.imeaces.levellogin.data.ChannelKeys
+import org.imeaces.levellogin.handle.HandleGrabGameProfile
 import org.imeaces.levellogin.profile.AccountId
 import org.slf4j.Logger
 import java.nio.file.Path
@@ -23,16 +25,28 @@ class LevelLoginPlugin @Inject constructor(
     fun onProxyInitialization(event: ProxyInitializeEvent) {
         logger.info("datadir: {}", dataDirectory)
         logger.info("server: {}", server)
+
+        HandleGrabGameProfile.setHandler { it ->
+            // TODO: grab game profile relate to accountId
+
+            GameProfile.forOfflinePlayer("unknown")
+        }
     }
 
     @Subscribe
     fun onPreLogin(event: PreLoginEvent){
         val inbound = event.connection
         if (inbound is LoginInboundConnection){
-            // TODO: grab accountId for offline player by inbound info
-            val accountId: AccountId? = null
+            val channel = inbound.delegatedConnection().channel
+            val accountId: AccountId? = channel.attr(ChannelKeys.AccountIdKey).get()
 
-            inbound.delegatedConnection().channel.attr(ChannelKeys.AccountIdKey).set(accountId)
+            if (accountId == null){
+                // TODO: grab accountId for offline player by inbound info
+
+                if (accountId != null) {
+                    channel.attr(ChannelKeys.AccountIdKey).setIfAbsent(accountId)
+                }
+            }
         }
     }
 }

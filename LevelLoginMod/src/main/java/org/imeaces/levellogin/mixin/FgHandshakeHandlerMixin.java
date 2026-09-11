@@ -32,7 +32,9 @@ public class FgHandshakeHandlerMixin {
             @Local(name = "player") FloodgatePlayer fgPlayer
             ){
 
+        // 此处处于 Floodgate 处理 HandshakePacket 的处理方法中
+
         var accountId = new AccountId("floodgate", fgPlayer.getXuid());
-        channel.attr(ChannelKeys.AccountIdKey).set(accountId);
+        channel.attr(ChannelKeys.AccountIdKey).setIfAbsent(accountId);
     }
 }
