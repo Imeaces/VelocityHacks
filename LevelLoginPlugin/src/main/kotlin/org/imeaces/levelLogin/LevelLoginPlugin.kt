@@ -23,18 +23,6 @@ class LevelLoginPlugin @Inject constructor(
     fun onProxyInitialization(event: ProxyInitializeEvent) {
         logger.info("datadir: {}", dataDirectory)
         logger.info("server: {}", server)
-//        server.eventManager.register(this, EventLogListener(logger))
-    }
-
-    companion object {
-        @JvmStatic
-        var jarPath: Path = Path.of( LevelLoginPlugin::class.java.protectionDomain.codeSource.location.toURI() )
-    }
-
-    @Subscribe
-    fun onGameProfileRequest(event: GameProfileRequestEvent) {
-        var inbound = event.connection
-        // event.gameProfile = ProfileProvider.getGameProfile(inbound)
     }
 
     @Subscribe
