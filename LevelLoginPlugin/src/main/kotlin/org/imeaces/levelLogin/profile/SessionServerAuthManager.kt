@@ -4,7 +4,7 @@ import com.velocitypowered.proxy.connection.client.LoginInboundConnection
 import net.kyori.adventure.text.Component
 import org.imeaces.levellogin.handle.HandleHasJoined
 
-class SessionServerAuthManager : HandleHasJoined.HandleHasJoinedHandler {
+class SessionServerAuthManager(plugin: LevelLoginPlugin) : HandleHasJoined.HandleHasJoinedHandler {
     override fun requestHasJoined(
         username: String,
         serverId: String,

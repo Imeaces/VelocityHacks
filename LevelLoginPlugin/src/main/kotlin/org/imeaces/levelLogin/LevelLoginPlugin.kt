@@ -2,15 +2,11 @@ package org.imeaces.levelLogin
 
 import com.google.inject.Inject
 import com.velocitypowered.api.event.Subscribe
-import com.velocitypowered.api.event.connection.PreLoginEvent
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
-import com.velocitypowered.api.util.GameProfile
-import org.imeaces.levellogin.handle.HandleChannelAccountId
 import org.imeaces.levellogin.handle.HandleGrabGameProfile
 import org.imeaces.levellogin.handle.HandleHasJoined
-import org.imeaces.levellogin.profile.AccountId
 import org.slf4j.Logger
 import java.nio.file.Path
 
@@ -19,9 +15,8 @@ class LevelLoginPlugin @Inject constructor(
     @DataDirectory private val dataDirectory: Path,
     private val server: ProxyServer,
 ) {
-    val offlineSessionAuthManager = OfflineSessionAuthManager()
-    val sessionServerAuthManager = SessionServerAuthManager()
-    val accountManager = AccountManager()
+    val sessionServerAuthManager = SessionServerAuthManager(this)
+    val accountManager = AccountManager(this)
 
     @Subscribe
     fun onProxyInitialization(event: ProxyInitializeEvent) {
@@ -30,6 +25,6 @@ class LevelLoginPlugin @Inject constructor(
 
         HandleHasJoined.setHandler(sessionServerAuthManager)
         HandleGrabGameProfile.setHandler(accountManager)
-        server.eventManager.register(this, offlineSessionAuthManager)
+        server.eventManager.register(this, accountManager.OfflineSessionAuthListener())
     }
 }
