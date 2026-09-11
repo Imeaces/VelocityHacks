@@ -22,7 +22,7 @@ dependencies {
 	compileOnlyApi("org.geysermc.floodgate:api:2.2.5-SNAPSHOT")
 
 	// for mixin usage
-	compileOnly(accessWiden("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT"))
+	compileOnlyApi(accessWiden("com.velocitypowered:velocity-proxy:4.1.2-SNAPSHOT"))
 	compileOnly("org.geysermc.floodgate:core:2.2.5-SNAPSHOT")
 	compileOnly("org.geysermc.floodgate:velocity:2.2.5-SNAPSHOT")
 }

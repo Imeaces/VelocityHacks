@@ -7,7 +7,9 @@ import com.velocitypowered.api.event.player.GameProfileRequestEvent
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent
 import com.velocitypowered.api.plugin.annotation.DataDirectory
 import com.velocitypowered.api.proxy.ProxyServer
-import org.imeaces.levellogin.profile.ProfileProvider
+import com.velocitypowered.proxy.connection.client.LoginInboundConnection
+import org.imeaces.levellogin.data.ChannelKeys
+import org.imeaces.levellogin.profile.AccountId
 import org.slf4j.Logger
 import java.nio.file.Path
 
@@ -37,6 +39,12 @@ class LevelLoginPlugin @Inject constructor(
 
     @Subscribe
     fun onPreLogin(event: PreLoginEvent){
-        event.result = PreLoginEvent.PreLoginComponentResult.forceOfflineMode()
+        val inbound = event.connection
+        if (inbound is LoginInboundConnection){
+            // TODO: grab accountId for offline player by inbound info
+            val accountId: AccountId? = null
+
+            inbound.delegatedConnection().channel.attr(ChannelKeys.AccountIdKey).set(accountId)
+        }
     }
 }

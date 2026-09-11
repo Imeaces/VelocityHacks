@@ -6,6 +6,7 @@ import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.player.FloodgateHandshakeHandler;
 import org.geysermc.floodgate.util.BedrockData;
 import org.geysermc.floodgate.util.LinkedPlayer;
+import org.imeaces.levellogin.data.ChannelKeys;
 import org.imeaces.levellogin.profile.AccountId;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +23,7 @@ public class FgHandshakeHandlerMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void levelLogin$injectHandlePart2(
+    private void levelLogin$inject$captureAccountId(
             Channel channel,
             String hostname,
             BedrockData bedrockData,
@@ -32,5 +33,6 @@ public class FgHandshakeHandlerMixin {
             ){
 
         var accountId = new AccountId("floodgate", fgPlayer.getXuid());
+        channel.attr(ChannelKeys.AccountIdKey).set(accountId);
     }
 }
