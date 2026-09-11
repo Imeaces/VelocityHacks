@@ -6,7 +6,7 @@ import org.geysermc.floodgate.api.player.FloodgatePlayer;
 import org.geysermc.floodgate.player.FloodgateHandshakeHandler;
 import org.geysermc.floodgate.util.BedrockData;
 import org.geysermc.floodgate.util.LinkedPlayer;
-import org.imeaces.levellogin.data.ChannelKeys;
+import org.imeaces.levellogin.handle.HandleChannelAccountId;
 import org.imeaces.levellogin.profile.AccountId;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +34,6 @@ public class FgHandshakeHandlerMixin {
 
         // 此处处于 Floodgate 处理 HandshakePacket 的处理方法中
 
-        var accountId = new AccountId("floodgate", fgPlayer.getXuid());
-        channel.attr(ChannelKeys.AccountIdKey).setIfAbsent(accountId);
+        HandleChannelAccountId.update(channel, new AccountId("floodgate", fgPlayer.getXuid()));
     }
 }

@@ -12,9 +12,12 @@ import com.velocitypowered.proxy.protocol.StateRegistry;
 import com.velocitypowered.proxy.protocol.packet.EncryptionRequestPacket;
 import com.velocitypowered.proxy.protocol.packet.EncryptionResponsePacket;
 import com.velocitypowered.proxy.protocol.packet.ServerLoginPacket;
+import net.kyori.adventure.text.Component;
 import org.imeaces.levellogin.LevelLoginMain;
 import org.imeaces.levellogin.data.ChannelKeys;
+import org.imeaces.levellogin.handle.HandleChannelAccountId;
 import org.imeaces.levellogin.handle.HandleGrabGameProfile;
+import org.imeaces.levellogin.handle.HandleHasJoined;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -138,9 +141,14 @@ public abstract class InitialLoginSessionHandlerMixin {
     private void levelLogin$inject$handleEncryption(
             EncryptionResponsePacket pk,
             CallbackInfoReturnable<Boolean> ci,
-            @Local( name = "serverId" ) String serverId
-    ){
-        var accountId = mcConnection.getChannel().attr(ChannelKeys.AccountIdKey).get();
+            @Local( name = "serverId" ) String serverId,
+            @Local( name = "playerIp" ) String clientIp
+    ) {
+        // always cancel remaining codes under inject point
+        ci.setReturnValue(true);
+        ci.cancel();
+
+        var accountId = HandleChannelAccountId.get(mcConnection);
         boolean isOnlineMode = false;
 
         if (accountId == null) {
@@ -148,11 +156,26 @@ public abstract class InitialLoginSessionHandlerMixin {
 
             LevelLoginMain.getLogger().info("ship to online check logic");
 
-            // TODO: online auth check
             isOnlineMode = true;
+            HandleHasJoined.requestHasJoined(
+                    login.getUsername(),
+                    serverId,
+                    clientIp,
+                    inbound
+            );
 
-            // after online auth get accountId again
-            accountId = mcConnection.getChannel().attr(ChannelKeys.AccountIdKey).get();
+            accountId = HandleChannelAccountId.get(mcConnection);
+        }
+
+        if (accountId == null) {
+            // auth failed
+
+            if (!mcConnection.isClosed()) {
+                LevelLoginMain.getLogger().warn("Unable to authenticate player {}", login.getUsername());
+                inbound.disconnect(Component.translatable("multiplayer.disconnect.authservers_down"));
+            }
+
+            return;
         }
 
         var gameProfile = HandleGrabGameProfile.grabGameProfile(accountId);
@@ -168,9 +191,6 @@ public abstract class InitialLoginSessionHandlerMixin {
                         serverId
                 )
         );
-
-        ci.setReturnValue(true);
-        ci.cancel();
     }
 
     @Inject(
