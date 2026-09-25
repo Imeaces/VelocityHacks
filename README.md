@@ -1,25 +1,70 @@
-# Imeaces Origin Server Entrypoint V2 
+# Imeaces Origin Server Entrypoint V2
 
 Imeaces Origin 服务器的下一代入口设施，缓慢开发中……
 
 ## Build
 
-This project uses [Gradle](https://gradle.org/). To build and run the application, use the *Gradle* tool window by
-clicking the Gradle icon in the right-hand toolbar, or run it directly from the terminal:
+本项目使用 [Gradle](https://gradle.org/) 构建，并提供 Gradle Wrapper。
 
-* Run `./gradlew run` to build and run the application.
-* Run `./gradlew build` to only build the application.
-* Run `./gradlew check` to run all checks, including tests.
-* Run `./gradlew clean` to clean all build outputs.
+由于当前 `LevelLoginMod` 的 Access Widener 依赖需要直接读取 `VelocityServer` 的构建产物，而该依赖暂时无法在 Gradle 中正确声明，因此需要按照以下顺序进行构建：
 
-Note the usage of the Gradle Wrapper (`./gradlew`). This is the suggested way to use Gradle in production projects.
+1. 构建 Velocity Server：
 
-[Learn more about the Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
+   ```bash
+   ./gradlew :VelocityServer:assemble
+   ```
 
-[Learn more about Gradle tasks](https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks).
+2. 构建应用启动器：
 
-This project follows the suggested multi-module setup and consists of the `app` and `utils` subprojects. The shared
-build logic was extracted to a convention plugin located in `buildSrc`.
+   ```bash
+   ./gradlew :app:installDist
+   ```
 
-This project uses a version catalog (see `gradle/libs.versions.toml`) to declare and version dependencies and both a
-build cache and a configuration cache (see `gradle.properties`).
+   构建完成后，可运行的文件集位于：
+
+   ```text
+   app/build/install/VelocityHacks/
+   ```
+
+3. 构建 LevelLogin Velocity 插件：
+
+   ```bash
+   ./gradlew :LevelLoginPlugin:assemble
+   ```
+
+   构建完成后，可在以下位置找到插件：
+
+   ```text
+   LevelLoginPlugin/build/libs/LevelLoginPlugin-1.0.0-all.jar
+   ```
+
+## 运行
+
+`app` 模块是整个服务器的启动包装器。它负责启动 Velocity Server，并同时加载 KeitaLoader 与 LevelLoginMod。
+
+运行前：
+
+1. 将构建得到的 `LevelLoginPlugin-1.0.0-all.jar` 放入 Velocity Server 的插件目录。
+2. 准备好需要运行的 Velocity Server 文件。
+3. 使用 `app` 模块生成的启动器运行服务器。
+
+例如：
+
+```bash
+./app/build/install/VelocityHacks/bin/VelocityHacks <velocity-server.jar>
+```
+
+具体启动参数以当前 `app` 模块的命令行参数实现为准。
+
+### 构建产物
+
+完成上述构建步骤后，主要需要关注：
+
+```text
+app/build/install/VelocityHacks/
+└── bin/
+    └── VelocityHacks
+
+LevelLoginPlugin/build/libs/
+└── LevelLoginPlugin-1.0.0-all.jar
+```
