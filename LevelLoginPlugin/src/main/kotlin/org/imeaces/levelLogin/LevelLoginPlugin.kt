@@ -13,7 +13,7 @@ import java.nio.file.Path
 class LevelLoginPlugin @Inject constructor(
     private val logger: Logger,
     @DataDirectory private val dataDirectory: Path,
-    private val server: ProxyServer,
+    val server: ProxyServer,
 ) {
     val sessionServerAuthManager = SessionServerAuthManager(this)
     val accountManager = AccountManager(this)
