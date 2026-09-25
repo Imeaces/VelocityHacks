@@ -7,14 +7,15 @@ import com.velocitypowered.proxy.connection.client.LoginInboundConnection
 import org.imeaces.levellogin.handle.HandleChannelAccountId
 import org.imeaces.levellogin.handle.HandleGrabGameProfile
 import org.imeaces.levellogin.profile.AccountId
-import org.imeaces.levellogin.profile.OfflinePlayerIdentity
+import org.imeaces.levellogin.profile.PlayerTrait
+import kotlin.jvm.optionals.getOrNull
 
 class AccountManager(plugin: LevelLoginPlugin) : HandleGrabGameProfile.HandleGrabGameProfileHandler {
     override fun grabGameProfile(accountId: AccountId): GameProfile {
         TODO("grab game profile relate to accountId")
     }
 
-    fun grabAccountId(maybeOfflineIdentity: OfflinePlayerIdentity): AccountId? {
+    fun grabAccountId(maybeOfflineIdentity: PlayerTrait): AccountId? {
         // TODO: grab accountId for offline player by inbound info
 
         return null
@@ -24,22 +25,22 @@ class AccountManager(plugin: LevelLoginPlugin) : HandleGrabGameProfile.HandleGra
         @Subscribe
         fun onPreLogin(event: PreLoginEvent){
             val inbound = event.connection
-            if (HandleChannelAccountId.withLoginInboundConnectionHas(inbound)) {
+            if (inbound !is LoginInboundConnection) {
                 return
             }
 
-            val loginInbound: LoginInboundConnection = inbound as LoginInboundConnection
-
-            val maybeOfflineIdentity = OfflinePlayerIdentity(
-                loginInbound.remoteAddress.address.hostAddress,
+            val maybeOfflineIdentity = PlayerTrait(
+                inbound.remoteAddress.address.hostAddress,
                 event.username,
-                event.uniqueId
+                event.uniqueId,
+                inbound.rawVirtualHost.getOrNull(),
+                inbound.protocolVersion.protocol
             )
 
             val accountId: AccountId? = grabAccountId(maybeOfflineIdentity)
 
             if (accountId != null) {
-                HandleChannelAccountId.withLoginInboundConnectionUpdate(inbound, accountId)
+                HandleChannelAccountId.claim(inbound, accountId)
             }
         }
     }

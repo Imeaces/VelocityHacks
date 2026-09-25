@@ -34,6 +34,6 @@ public class FgHandshakeHandlerMixin {
 
         // 此处处于 Floodgate 处理 HandshakePacket 的处理方法中
 
-        HandleChannelAccountId.update(channel, new AccountId("floodgate", fgPlayer.getXuid()));
+        HandleChannelAccountId.claim(channel, new AccountId("floodgate", fgPlayer.getXuid()));
     }
 }

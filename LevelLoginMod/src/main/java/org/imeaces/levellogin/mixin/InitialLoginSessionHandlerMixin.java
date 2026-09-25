@@ -82,7 +82,7 @@ public abstract class InitialLoginSessionHandlerMixin {
     private void levelLogin$inject$tryHandleLogin(PreLoginEvent.PreLoginComponentResult result, CallbackInfo ci) {
         ci.cancel(); // always cancel remaining codes under inject point
 
-        var accountId = mcConnection.getChannel().attr(ChannelKeys.AccountIdKey).get();
+        var accountId = HandleChannelAccountId.get(mcConnection);
 
         // 只有在"没有已确定的账户"且"运行配置要求使用 Yggdrasil 认证"时，才向会话服务器认证。
         // 原版 Velocity 的判定逻辑已被覆盖
@@ -173,9 +173,10 @@ public abstract class InitialLoginSessionHandlerMixin {
         boolean shouldAuthenticate = shouldAuthenticateAttr == null || shouldAuthenticateAttr;
 
         if (accountId != null) {
-            LevelLoginMain.getLogger().info("ship to online check logic due to exist accountId: {}", accountId);
+            LevelLoginMain.getLogger().info("shipped to LOGIN stage due to existed accountId: {}", accountId);
         } else if (!shouldAuthenticate) {
-            LevelLoginMain.getLogger().info("ship to online check logic due to require skip authenticate for {}", username);
+            LevelLoginMain.getLogger().info(
+                    "shipped to LOGIN stage because authentication was skipped for player {}", username);
         } else {
             // 没有预先确定的账户，且要求使用 Yggdrasil 在线认证，开始认证过程。
             levelLogin$requestOnlineAuthHasJoined(username, serverId, clientIp);
@@ -297,7 +298,7 @@ public abstract class InitialLoginSessionHandlerMixin {
      * 以解析出的 {@link AccountId} 建立会话，并切换到 {@link AuthSessionHandler}。
      */
     private void levelLogin$startSession(AccountId accountId, boolean isOnlineMode, String serverId) {
-        HandleChannelAccountId.update(mcConnection, accountId);
+        HandleChannelAccountId.claim(mcConnection, accountId);
 
         var gameProfile = HandleGrabGameProfile.grabGameProfile(accountId);
 

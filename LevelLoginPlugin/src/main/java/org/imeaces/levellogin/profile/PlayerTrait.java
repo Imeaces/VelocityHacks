@@ -5,9 +5,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public record OfflinePlayerIdentity(
+public record PlayerTrait(
         @NotNull String clientIp,
         @NotNull String playerName,
-        @Nullable UUID holderUuid
+        @Nullable UUID holderUuid,
+        @Nullable String inboundVirtualHost,
+        int inboundProtocolVersion
 ) {
 }
