@@ -65,7 +65,7 @@ public abstract class InitialLoginSessionHandlerMixin {
             PreLoginEvent.PreLoginComponentResult result
     ) {
         // 总是使用离线模式，以便自行处理逻辑
-        LevelLoginMain.getLogger().info("force offline mode condition branch");
+        LevelLoginMain.getLogger().trace("force offline mode condition branch");
 
         return true;
     }
