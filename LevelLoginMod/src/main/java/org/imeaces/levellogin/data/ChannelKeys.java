@@ -5,4 +5,6 @@ import org.imeaces.levellogin.profile.AccountId;
 
 public class ChannelKeys {
     public static final AttributeKey<AccountId> AccountIdKey = AttributeKey.valueOf("levelLogin_accountId");
+    public static final AttributeKey<Boolean> ShouldAuthenticateKey =
+            AttributeKey.valueOf("levelLogin_shouldAuthenticate");
 }
