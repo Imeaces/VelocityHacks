@@ -1,9 +1,14 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
 	id("buildsrc.convention.multable-jvm")
+	id("com.gradleup.shadow") version "9.2.2"
 }
 
 dependencies {
 	compileOnly(project(":LevelLoginMod"))
+
+	implementation("org.xerial:sqlite-jdbc:3.53.4.0")
 }
 
 tasks.processResources {
@@ -27,4 +32,12 @@ tasks.jar {
 	from("LICENSE") {
 		rename { "${it}_$projectName" }
 	}
+}
+
+tasks.getByName<ShadowJar>("shadowJar") {
+	mergeServiceFiles()
+}
+
+tasks.named("assemble") {
+	dependsOn("shadowJar")
 }
