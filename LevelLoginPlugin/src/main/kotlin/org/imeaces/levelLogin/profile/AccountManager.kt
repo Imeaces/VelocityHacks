@@ -1,46 +1,44 @@
-package org.imeaces.levelLogin
+package org.imeaces.levelLogin.profile
 
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.PreLoginEvent
 import com.velocitypowered.api.util.GameProfile
 import com.velocitypowered.proxy.connection.client.LoginInboundConnection
-import org.imeaces.levellogin.handle.HandleChannelAccountId
-import org.imeaces.levellogin.handle.HandleGrabGameProfile
+import org.imeaces.levelLogin.LevelLoginPlugin
+import org.imeaces.levellogin.data.ChannelKeys
 import org.imeaces.levellogin.profile.AccountId
 import org.imeaces.levellogin.profile.PlayerTrait
-import kotlin.jvm.optionals.getOrNull
 
-class AccountManager(plugin: LevelLoginPlugin) : HandleGrabGameProfile.HandleGrabGameProfileHandler {
-    override fun grabGameProfile(accountId: AccountId): GameProfile {
+class AccountManager(private val plugin: LevelLoginPlugin) {
+    fun grabGameProfile(accountId: AccountId): GameProfile {
         TODO("grab game profile relate to accountId")
     }
 
     fun grabAccountId(maybeOfflineIdentity: PlayerTrait): AccountId? {
-        // TODO: grab accountId for offline player by inbound info
-
-        return null
+        TODO("grab accountId for offline player by inbound info")
     }
 
     inner class OfflineSessionAuthListener {
-        @Subscribe
+        @Subscribe(priority = 10000)
         fun onPreLogin(event: PreLoginEvent){
             val inbound = event.connection
             if (inbound !is LoginInboundConnection) {
-                return
+                throw RuntimeException(
+                "inbound connection is not of type LoginInboundConnection, typeof inbound = "
+                + inbound::class.java.name)
             }
 
-            val maybeOfflineIdentity = PlayerTrait(
-                inbound.remoteAddress.address.hostAddress,
-                event.username,
-                event.uniqueId,
-                inbound.rawVirtualHost.getOrNull(),
-                inbound.protocolVersion.protocol
-            )
+            val playerTrait: PlayerTrait? = ChannelKeys.PlayerTraitKey.get(inbound)
 
-            val accountId: AccountId? = grabAccountId(maybeOfflineIdentity)
+            if (playerTrait == null) {
+                throw IllegalStateException("Player trait not found")
+            }
+
+            val accountId: AccountId? = grabAccountId(playerTrait)
 
             if (accountId != null) {
-                HandleChannelAccountId.claim(inbound, accountId)
+                plugin.logger.info( "claiming accountId for player {}: {}", event.username, accountId )
+                ChannelKeys.AccountIdKey.claim(inbound, accountId)
             }
         }
     }
