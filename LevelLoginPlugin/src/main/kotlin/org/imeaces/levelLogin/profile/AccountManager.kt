@@ -6,6 +6,7 @@ import com.velocitypowered.api.util.GameProfile
 import com.velocitypowered.proxy.connection.client.LoginInboundConnection
 import org.imeaces.levelLogin.LevelLoginPlugin
 import org.imeaces.levellogin.data.ChannelKeys
+import org.imeaces.levellogin.event.AccountIdMappingEvent
 import org.imeaces.levellogin.profile.AccountId
 import org.imeaces.levellogin.profile.PlayerTrait
 
@@ -14,11 +15,20 @@ class AccountManager(private val plugin: LevelLoginPlugin) {
         TODO("grab game profile relate to accountId")
     }
 
-    fun grabAccountId(maybeOfflineIdentity: PlayerTrait): AccountId? {
-        TODO("grab accountId for offline player by inbound info")
+    fun grabRelatedAccountId(playerTrait: PlayerTrait): AccountId? {
+        // TODO grab accountId for offline player by inbound info
+        return null
+    }
+
+    inner class AccountIdMappingListener {
+        @Subscribe
+        fun onGameProfileMapping(event: AccountIdMappingEvent){
+            event.gameProfile = grabGameProfile(event.accountId)
+        }
     }
 
     inner class OfflineSessionAuthListener {
+
         @Subscribe(priority = 10000)
         fun onPreLogin(event: PreLoginEvent){
             val inbound = event.connection
@@ -34,7 +44,7 @@ class AccountManager(private val plugin: LevelLoginPlugin) {
                 throw IllegalStateException("Player trait not found")
             }
 
-            val accountId: AccountId? = grabAccountId(playerTrait)
+            val accountId: AccountId? = grabRelatedAccountId(playerTrait)
 
             if (accountId != null) {
                 plugin.logger.info( "claiming accountId for player {}: {}", event.username, accountId )

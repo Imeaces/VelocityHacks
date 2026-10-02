@@ -25,5 +25,6 @@ class LevelLoginPlugin @Inject constructor(
 
         server.eventManager.register(this, sessionServerAuthManager.YggdrasilSessionAuthListener())
         server.eventManager.register(this, accountManager.OfflineSessionAuthListener())
+        server.eventManager.register(this, accountManager.AccountIdMappingListener())
     }
 }

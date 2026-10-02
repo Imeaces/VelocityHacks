@@ -8,13 +8,13 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
-public class GameProfileMappingEvent {
+public class AccountIdMappingEvent {
     @Getter
     private final @NotNull AccountId accountId;
 
     private GameProfile gameProfile;
 
-    public GameProfileMappingEvent(@NonNull AccountId accountId) {
+    public AccountIdMappingEvent(@NonNull AccountId accountId) {
         this.accountId = accountId;
     }
 

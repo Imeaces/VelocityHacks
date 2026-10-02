@@ -21,7 +21,7 @@ import org.imeaces.levellogin.LevelLoginMain;
 import org.imeaces.levellogin.data.ChannelKeys;
 import org.imeaces.levellogin.data.HasJoinedOnlineResponseResult;
 import org.imeaces.levellogin.data.LevelLoginConfiguration;
-import org.imeaces.levellogin.event.GameProfileMappingEvent;
+import org.imeaces.levellogin.event.AccountIdMappingEvent;
 import org.imeaces.levellogin.event.YggdrasilHasJoinedRequestEvent;
 import org.imeaces.levellogin.profile.AccountId;
 import org.imeaces.levellogin.profile.PlayerTrait;
@@ -35,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
+import java.util.function.Function;
 
 @Mixin(InitialLoginSessionHandler.class)
 public abstract class InitialLoginSessionHandlerMixin {
@@ -240,8 +241,12 @@ public abstract class InitialLoginSessionHandlerMixin {
             String serverId,
             String clientIp
     ){
+        LevelLoginMain.getLogger().info(
+                "requesting yggdrasil auth for player {} clientIp {}",
+                username, clientIp
+        );
+
         var requestEvent = new YggdrasilHasJoinedRequestEvent(username, serverId, clientIp, inbound);
-        var requestFuture = server.getEventManager().fire(requestEvent);
 
         Runnable responseHandle = () -> {
             if (mcConnection.isClosed()) return;
@@ -249,7 +254,10 @@ public abstract class InitialLoginSessionHandlerMixin {
             var authResult = requestEvent.getResult();
             levelLogin$requestHasJoined$complete(authResult, serverId);
         };
-        requestFuture.thenRunAsync(responseHandle, mcConnection.eventLoop());
+
+        server.getEventManager().fire(requestEvent)
+            .thenRunAsync(responseHandle, mcConnection.eventLoop())
+            .exceptionallyAsync(levelLogin$createGenericErrHandle(), mcConnection.eventLoop());
     }
 
     private void levelLogin$requestHasJoined$complete(
@@ -304,9 +312,13 @@ public abstract class InitialLoginSessionHandlerMixin {
     private void levelLogin$startSession(@NotNull AccountId accountId, boolean isOnlineMode, @Nullable String serverId) {
         ChannelKeys.AccountIdKey.claim(mcConnection, accountId);
 
-        // 使用 GameProfileMappingEvent 获取玩家档案
-        // TODO: 在其他位置处理 GameProfileMappingEvent 事件，并正确返回数据
-        var reqProfileEvent = new GameProfileMappingEvent(accountId);
+        LevelLoginMain.getLogger().info(
+                "mapping accountId {} under player {} clientIp {} to gameProfile",
+                accountId, login.getUsername(), inbound.getRemoteAddress()
+        );
+
+        // 使用 AccountIdMappingEvent 获取玩家档案
+        var reqProfileEvent = new AccountIdMappingEvent(accountId);
         Runnable gameProfileHandle = () -> {
             var gameProfile = reqProfileEvent.getGameProfile();
 
@@ -322,7 +334,26 @@ public abstract class InitialLoginSessionHandlerMixin {
                     )
             );
         };
+
         server.getEventManager().fire(reqProfileEvent)
-                .thenRunAsync(gameProfileHandle, mcConnection.eventLoop());
+                .thenRunAsync(gameProfileHandle, mcConnection.eventLoop())
+                .exceptionallyAsync(levelLogin$createGenericErrHandle(), mcConnection.eventLoop());
+    }
+
+    private Function<Throwable, Void> levelLogin$createGenericErrHandle(){
+        return (err) -> {
+            levelLogin$genericErrHandle(err);
+            return null;
+        };
+    }
+
+    private void levelLogin$genericErrHandle(Throwable err){
+        LevelLoginMain.getLogger().error(
+                "unexpected error under player {} connect from {}, disconnecting...",
+                login.getUsername(), inbound.getRemoteAddress(), err
+        );
+        if (!mcConnection.isClosed()){
+            inbound.disconnect(Component.translatable("multiplayer.disconnect.generic"));
+        }
     }
 }
