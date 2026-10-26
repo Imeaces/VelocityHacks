@@ -2,6 +2,7 @@ package org.imeaces.levelLogin.profile
 
 import com.velocitypowered.api.event.Subscribe
 import com.velocitypowered.api.event.connection.PreLoginEvent
+import com.velocitypowered.api.event.connection.LoginEvent
 import com.velocitypowered.api.util.GameProfile
 import com.velocitypowered.proxy.connection.client.LoginInboundConnection
 import org.imeaces.levelLogin.LevelLoginPlugin
@@ -35,7 +36,7 @@ class AccountManager(
 
     inner class AccountIdMappingListener {
         @Subscribe
-        fun onGameProfileMapping(event: AccountIdMappingEvent){
+        fun onGameProfileMapping(event: AccountIdMappingEvent) {
             event.gameProfile = grabGameProfile(event.accountId)
         }
     }
@@ -43,12 +44,12 @@ class AccountManager(
     inner class OfflineSessionAuthListener {
 
         @Subscribe(priority = 10000)
-        fun onPreLogin(event: PreLoginEvent){
+        fun onPreLogin(event: PreLoginEvent) {
             val inbound = event.connection
             if (inbound !is LoginInboundConnection) {
                 throw RuntimeException(
-                "inbound connection is not of type LoginInboundConnection, typeof inbound = "
-                + inbound::class.java.name)
+                    "inbound connection is not of type LoginInboundConnection, typeof inbound = "
+                    + inbound::class.java.name)
             }
 
             val playerTrait: PlayerTrait? = ChannelKeys.PlayerTraitKey.get(inbound)
@@ -60,8 +61,29 @@ class AccountManager(
             val accountId: AccountId? = grabRelatedAccountId(playerTrait)
 
             if (accountId != null) {
-                plugin.logger.info( "claiming accountId for player {}: {}", event.username, accountId )
+                plugin.logger.info("claiming accountId for player {}: {}", event.username, accountId)
                 ChannelKeys.AccountIdKey.claim(inbound, accountId)
+            }
+        }
+    }
+
+    /**
+     * 登录后检查是否需要密码认证
+     */
+    inner class PostLoginAuthListener {
+        @Subscribe
+        fun onLogin(event: LoginEvent) {
+            val player = event.player
+
+            // 检查是否有 AccountId
+            if (event.connection is LoginInboundConnection) {
+                val inbound = event.connection as LoginInboundConnection
+                val accountId = ChannelKeys.AccountIdKey.get(inbound)
+
+                if (accountId == null && plugin.config.isEnablePassword) {
+                    // 没有认证，需要密码认证
+                    plugin.passwordAuthManager.requireAuth(player, player.username)
+                }
             }
         }
     }

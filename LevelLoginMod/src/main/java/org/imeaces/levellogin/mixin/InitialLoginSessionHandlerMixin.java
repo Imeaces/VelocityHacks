@@ -266,17 +266,38 @@ public abstract class InitialLoginSessionHandlerMixin {
     ) {
         switch (authResult){
             case HasJoinedOnlineResponseResult.Failed _ -> {
-                // 会话服务器出错
-                inbound.disconnect(
-                        Component.translatable("multiplayer.disconnect.authservers_down")
-                );
+                // 会话服务器出错，检查是否启用密码认证作为降级方案
+                if (LevelLoginConfiguration.isPasswordEnabled()) {
+                    LevelLoginMain.getLogger().warn(
+                            "Yggdrasil auth failed for {}, falling back to password authentication",
+                            login.getUsername()
+                    );
+                    ChannelKeys.PendingPasswordAuthKey.set(mcConnection, true);
+                    ChannelKeys.PendingPasswordUsernameKey.set(mcConnection, login.getUsername());
+                    levelLogin$startSession(serverId);
+                } else {
+                    inbound.disconnect(
+                            Component.translatable("multiplayer.disconnect.authservers_down")
+                    );
+                }
             }
 
             case HasJoinedOnlineResponseResult.Invalid _ -> {
-                // 会话服务器返回 204：该玩家并没有以此代理的身份登录。
-                inbound.disconnect(
-                        Component.translatable("velocity.error.online-mode-only", NamedTextColor.RED)
-                );
+                // 会话服务器返回 204：该玩家并没有以此代理的身份登录
+                // 检查是否启用密码认证作为降级方案
+                if (LevelLoginConfiguration.isPasswordEnabled()) {
+                    LevelLoginMain.getLogger().info(
+                            "Yggdrasil auth invalid for {}, falling back to password authentication",
+                            login.getUsername()
+                    );
+                    ChannelKeys.PendingPasswordAuthKey.set(mcConnection, true);
+                    ChannelKeys.PendingPasswordUsernameKey.set(mcConnection, login.getUsername());
+                    levelLogin$startSession(serverId);
+                } else {
+                    inbound.disconnect(
+                            Component.translatable("velocity.error.online-mode-only", NamedTextColor.RED)
+                    );
+                }
             }
 
             case HasJoinedOnlineResponseResult.Success successResult -> {
@@ -318,7 +339,7 @@ public abstract class InitialLoginSessionHandlerMixin {
         );
 
         // 使用 AccountIdMappingEvent 获取玩家档案
-        var reqProfileEvent = new AccountIdMappingEvent(accountId);
+        var reqProfileEvent = new AccountIdMappingEvent(accountId, inbound);
         Runnable gameProfileHandle = () -> {
             var gameProfile = reqProfileEvent.getGameProfile();
 
