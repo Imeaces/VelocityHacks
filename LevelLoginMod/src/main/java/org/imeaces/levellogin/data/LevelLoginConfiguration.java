@@ -23,4 +23,8 @@ public class LevelLoginConfiguration {
     public static Duration getHttpConnectionTimeout() {
         return Duration.ofSeconds(8);
     }
+
+    public static boolean isPasswordEnabled() {
+        return true;
+    }
 }
