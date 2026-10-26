@@ -7,17 +7,30 @@ import com.velocitypowered.proxy.connection.client.LoginInboundConnection
 import org.imeaces.levelLogin.LevelLoginPlugin
 import org.imeaces.levellogin.data.ChannelKeys
 import org.imeaces.levellogin.event.AccountIdMappingEvent
+import org.imeaces.levellogin.auth.LoginCredentialStore
 import org.imeaces.levellogin.profile.AccountId
 import org.imeaces.levellogin.profile.PlayerTrait
+import org.imeaces.levellogin.profile.ProfileIdentityStore
 
-class AccountManager(private val plugin: LevelLoginPlugin) {
+class AccountManager(
+    private val plugin: LevelLoginPlugin,
+    private val identityStore: ProfileIdentityStore,
+    private val loginCredentialStore: LoginCredentialStore,
+) {
     fun grabGameProfile(accountId: AccountId): GameProfile {
-        TODO("grab game profile relate to accountId")
+        val identity = identityStore.findIdentity(accountId).orElse(null)
+
+        if (identity == null) {
+            throw IllegalStateException("no profile identity is bound to account $accountId")
+        }
+
+        return GameProfile(identity.playerUniqueId, identity.playerName, emptyList())
     }
 
     fun grabRelatedAccountId(playerTrait: PlayerTrait): AccountId? {
-        // TODO grab accountId for offline player by inbound info
-        return null
+        // 连接特征整体作为指纹去查登录凭据。命中即代表这个连接"之前完成过一次认证"，
+        // 因此它关联的会话凭据可以直接采信，不需要再看 authType，也不需要反查身份存储。
+        return loginCredentialStore.findSessionCredential(playerTrait).orElse(null)
     }
 
     inner class AccountIdMappingListener {
